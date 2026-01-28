@@ -86,6 +86,7 @@ Returns the deployed branch name (`staging` or `main`).
 ### Verify Staging and Production Deployments
 Open in browser:
 http://<STAGING_EC2_PUBLIC_IP>:3000/version
+
 http://<PRODUCTION_EC2_PUBLIC_IP>:3000/version
 
 
