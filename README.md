@@ -1,52 +1,95 @@
-# Real-Time Chat Application
+# Multi-Stage Branch-Based Deployment (Staging & Production)
 
-## Overview
-The Real-Time Chat Application is a web-based messaging platform that allows users to engage in real-time text-based conversations. Built using Express.js for the backend and Socket.IO for real-time communication, this application provides a seamless chatting experience for users.
+## Project Overview
+This project demonstrates a **branch-based deployment strategy** using **GitHub Actions**, **Docker**, and **AWS EC2**.  
+The same GitHub repository is deployed to **two separate EC2 instances** based on the Git branch:
 
-## Features
-- **Real-Time Communication**: Utilizes WebSocket technology through Socket.IO to enable instant messaging between users.
-- **User Authentication**: Supports user authentication to ensure secure access to the chat platform.
-- **Multiple Rooms**: Allows users to create and join different chat rooms, facilitating discussions on various topics.
-- **User Presence Indicators**: Displays indicators to show when users are online or typing messages in real-time.
+- `staging` branch → Staging EC2 instance
+- `main` branch → Production EC2 instance
 
-## Technologies Used
-- **Express.js**: A web application framework for Node.js used for building the backend server and handling HTTP requests.
-- **Socket.IO**: A JavaScript library for real-time web applications that enables bidirectional communication between clients and servers.
-- **HTML/CSS/JavaScript**: Frontend technologies used for building the user interface and enhancing interactivity.
-- **npm**: The package manager for Node.js used for installing and managing project dependencies.
+The deployment is **fully automated** with CI/CD and does not require any manual steps after initial setup.
 
-## Installation
-To run the Real-Time Chat Application locally, follow these steps:
-1. Clone the repository to your local machine:
-   ```bash
-   git clone https://github.com/yourusername/real-time-chat-app.git
-   ```
-2. Navigate to the project directory:
-   ```bash
-   cd real-time-chat-app
-   ```
-3. Navigate to the server directory:
-   ```bash
-   cd server
-   ```   
-4. Install dependencies using npm:
-   ```bash
-   npm install
-   ```
-5. Start the server:
-   ```bash
-   npm start
-   ```
-6. Access the application in your web browser at `http://localhost:3500`.
+---
 
-## Future Enhancements
-- **File Sharing**: Allow users to share files such as images, documents, and videos within chat rooms.
-- **Encryption**: Implement end-to-end encryption for secure messaging and data privacy.
-- **User Profiles**: Enable users to create profiles with avatars, bios, and status updates.
-- **Notifications**: Implement push notifications for new messages and mentions to keep users informed.
-- **Moderation Tools**: Provide tools for administrators to manage users, monitor conversations, and enforce community guidelines.
+## Architecture Overview
+GitHub Repository
+├── staging branch ──▶ Staging EC2
+└── main branch ──▶ Production EC2
 
-## User Interface
-https://realtimeschatapps.netlify.app/
+GitHub Actions
+├── Detect branch
+├── Connect to EC2 via SSH
+├── Pull correct branch
+└── Deploy using Docker Compose
 
-! The website above is only a frontend. !
+
+---
+
+## Branch-to-Environment Mapping
+
+| Git Branch | Environment  | EC2 Instance |
+|-----------|-------------|--------------|
+| `staging` | Staging     | Staging EC2 |
+| `main`    | Production  | Production EC2 |
+
+Each branch is deployed to a **separate EC2 instance**, ensuring complete environment isolation.
+
+---
+
+## CI/CD Workflow Explanation
+
+The project uses **GitHub Actions** for Continuous Integration and Deployment.
+
+### Workflow behavior:
+1. A push is made to either `staging` or `main` branch
+2. GitHub Actions workflow is triggered automatically
+3. The workflow identifies the branch name
+4. Based on the branch:
+   - `staging` → deploys to Staging EC2
+   - `main` → deploys to Production EC2
+5. The pipeline:
+   - Connects to the EC2 instance using SSH
+   - Pulls the correct branch
+   - Builds the Docker image
+   - Runs the application using Docker Compose
+
+No manual deployment is performed after the pipeline is set up.
+
+---
+
+## Docker-Based Deployment
+
+- The application is containerized using **Docker**
+- **Docker Compose** is used to manage the application container
+- Environment variables are used to pass the branch name to the application
+
+The same Docker setup is used for both staging and production.
+
+---
+
+## Application Endpoints
+
+The application exposes the following endpoints:
+
+### Health Check
+/health
+Returns application health status.
+
+### Version Check
+/version
+Returns the deployed branch name (`staging` or `main`).
+
+---
+
+## Steps to Verify Deployment
+
+### Verify Staging and Production Deployments
+Open in browser:
+http://<STAGING_EC2_PUBLIC_IP>:3000/version
+http://<PRODUCTION_EC2_PUBLIC_IP>:3000/version
+
+
+
+
+
+
