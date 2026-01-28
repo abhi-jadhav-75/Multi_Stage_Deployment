@@ -13,12 +13,14 @@ The deployment is **fully automated** with CI/CD and does not require any manual
 
 ## Architecture Overview
 GitHub Repository
+
 ├── staging branch ──▶ Staging EC2
 
 └── main branch ──▶ Production EC2
 
 
 GitHub Actions
+
 ├── Detect branch
 
 ├── Connect to EC2 via SSH
