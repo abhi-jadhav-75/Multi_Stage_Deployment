@@ -14,12 +14,17 @@ The deployment is **fully automated** with CI/CD and does not require any manual
 ## Architecture Overview
 GitHub Repository
 ├── staging branch ──▶ Staging EC2
+
 └── main branch ──▶ Production EC2
+
 
 GitHub Actions
 ├── Detect branch
+
 ├── Connect to EC2 via SSH
+
 ├── Pull correct branch
+
 └── Deploy using Docker Compose
 
 
@@ -73,10 +78,12 @@ The application exposes the following endpoints:
 
 ### Health Check
 /health
+
 Returns application health status.
 
 ### Version Check
 /version
+
 Returns the deployed branch name (`staging` or `main`).
 
 ---
@@ -85,6 +92,7 @@ Returns the deployed branch name (`staging` or `main`).
 
 ### Verify Staging and Production Deployments
 Open in browser:
+
 http://<STAGING_EC2_PUBLIC_IP>:3000/version
 
 http://<PRODUCTION_EC2_PUBLIC_IP>:3000/version
