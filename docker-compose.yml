@@ -9,5 +9,6 @@ services:
     ports:
       - "3000:3000"
     environment:
+      - PORT=3000
       - BRANCH_NAME=${BRANCH_NAME}
     restart: always
