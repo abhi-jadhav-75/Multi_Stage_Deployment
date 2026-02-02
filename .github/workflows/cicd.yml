@@ -3,12 +3,13 @@ name: Branch Based Docker Deployment
 on:
   push:
     branches:
-      - main
       - staging
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: ${{ github.ref_name == 'main' && 'production' || 'staging' }}
 
     steps:
       - name: Checkout code
@@ -35,6 +36,7 @@ jobs:
         run: |
           ssh ubuntu@$HOST << EOF
             cd Multi_Stage_Deployment
+
             git fetch origin
             git checkout $BRANCH_NAME
             git pull origin $BRANCH_NAME
